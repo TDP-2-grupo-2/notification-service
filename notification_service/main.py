@@ -1,6 +1,6 @@
 import uvicorn
 from notification_service.app import app
-from notification_service.databases import notifications_database
+from notification_service.database import notifications_database
 
 
 notifications_database.init_database()
