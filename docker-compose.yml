@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  notifications-service: 
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "8082:8082"
+    
+    restart: on-failure
+    depends_on:
+      - postgres-notifications
+
+  postgres-notifications:
+    image: postgres:alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=notification_services_db
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - notifications-postgres:/var/lib/postgresql/data
+    restart: on-failure
+
+volumes:
+  notifications-postgres:
