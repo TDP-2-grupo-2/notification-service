@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, status
+from notification_service.database.database import get_postg_db
 from sqlalchemy.orm import Session
 from notification_service.database.notification_schema import DeviceBase
 from notification_service.database import notification_repository
-from notification_service.database.database import get_postg_db
 
 notification_router = APIRouter()
 
