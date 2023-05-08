@@ -9,7 +9,7 @@ init_database()
 logging.basicConfig(level=logging.INFO)
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=send_notifications_previous_day, trigger='interval', seconds=60)
+scheduler.add_job(func=send_notifications_previous_day, trigger='cron', hour=7, minute=00)
 scheduler.start()
 
 if __name__ == "__main__":

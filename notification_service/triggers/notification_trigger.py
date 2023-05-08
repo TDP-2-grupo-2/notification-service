@@ -3,7 +3,7 @@ from notification_service.model.notification_manager import notify_users
 
 def send_notifications_previous_day(): 
     # get evenntos que son mañana ( los que haya que notificar junto con los usuarios)
-    users_to_notify = requests.get("https://event-service-solfonte.cloud.okteto.net/events/notify")
+    users_to_notify = requests.get("https://event-service-solfonte.cloud.okteto.net/events/?nextDayEvents=1")
 
     #chequeos de codigos retornados
 
