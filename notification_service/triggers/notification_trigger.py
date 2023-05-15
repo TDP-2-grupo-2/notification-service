@@ -12,6 +12,7 @@ def send_notifications_previous_day():
         users_to_notify = response.json()['message']
         logging.warning(users_to_notify)
         notify_users(users_to_notify)
+        
         # envio de notificaciones a usuarios
     else:
         logging.error('received response status', response.status_code)
