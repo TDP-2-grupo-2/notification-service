@@ -29,8 +29,12 @@ from notification_service.database.database import get_postg_db
 
 def send_push_notification(token, title, message):
     try:
-        PushMessage(to=token,title=title, body=message, priority='high',display_in_foreground=False)
-        response = PushClient().publish(message)
+        token1 = "ExponentPushToken[ojyhwAB5ckUoXQRI796Ziz]"
+        title1 = "Hello Ramiro"
+        message1 = "Your yankee friend"
+        data1 = {"notification_type": "reminder", "event_id": "64610ab93e315138e9227002"}
+        pushMessage = PushMessage(to=token1,title=title1, body=message1, data=data1, priority='high',display_in_foreground=False)
+        response = PushClient().publish(pushMessage)
         response.validate_response()
     except PushServerError as exc:
         logging.warning("There was an error sending a reminder of event: ", str(exc))
@@ -49,4 +53,4 @@ def notify_users(users_to_notify: list,  db: Session = Depends(get_postg_db)):
         else: 
             title = user.event_name
             body = "Recordá que comienza mañana " + user.event_date + " a las " + user.event_start_time
-            send_push_notification(user_device_token, title, body)
+    send_push_notification('user_device_token', 'title', 'body')

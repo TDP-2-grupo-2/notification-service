@@ -1,5 +1,6 @@
 from fastapi.testclient import TestClient
 from fastapi import status
+from notification_service.utils.jwt_handler import create_access_token
 from test import config
 from notification_service.app import app
 
@@ -11,7 +12,8 @@ client = TestClient(app)
 
 def test_when_registering_a_new_device_it_registers_correctly():
     device_token = "ExponentPushToken[yEMHoKK54im4ig2FbyU1Rm]"
-    response = client.post("/notifications/new_user", json={'user_id': 1, 'token': device_token})
+    user_token = create_access_token("1", 'attendee')
+    response = client.post("/notifications/new_user", headers={"Authorization": f"Bearer {user_token}"}, json={'device_token': device_token})
     assert response.status_code == status.HTTP_201_CREATED, response.text
     data = response.json()
     data = data["message"]
@@ -25,8 +27,9 @@ def test_when_registering_a_new_device_it_registers_correctly():
 
 def test_when_registering_twice_a_new_device_it_returns_the_previous_device():
     device_token = "ExponentPushToken[yEMHoKK54im4ig2FbyU1Rm]"
-    client.post("/notifications/new_user", json={'user_id': 1, 'token': device_token})
-    response = client.post("/notifications/new_user", json={'user_id': 1, 'token': device_token})
+    user_token = create_access_token("1", 'attendee')
+    client.post("/notifications/new_user", headers={"Authorization": f"Bearer {user_token}"}, json={'device_token': device_token})
+    response = client.post("/notifications/new_user", headers={"Authorization": f"Bearer {user_token}"}, json={'device_token': device_token})
     data = response.json()
     data = data["message"]
 

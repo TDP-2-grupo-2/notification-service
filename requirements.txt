@@ -7,3 +7,4 @@ pytest==7.2.2
 pytest-mock==3.10.0
 httpx==0.23.3
 exponent-server-sdk==2.0.0
+python-jose==3.3.0
