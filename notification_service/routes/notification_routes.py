@@ -12,7 +12,6 @@ def register_new_device(rq: Request, device: DeviceBase, db: Session = Depends(g
     token = rq.headers.get("authorization")
     if token is not None:
         user_id = decode_token(token)['id']
-        print('uuser', user_id)
         new_device = notification_repository.register_device(db, user_id, device.device_token)
     return {"message": new_device}
 
