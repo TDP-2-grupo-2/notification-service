@@ -2,8 +2,14 @@ from typing import Optional, Dict
 from pydantic import BaseModel
 
 class DeviceBase(BaseModel):
-    user_id: int
+    device_token: str
+
+    class Config:
+        orm_mode = True
+
+class RegisterDevice(BaseModel):
     token: str
+    user_id: str
 
     class Config:
         orm_mode = True
