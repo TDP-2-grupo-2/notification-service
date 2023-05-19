@@ -45,13 +45,12 @@ def send_push_notification(token, title, message, event_id):
 
 def notify_users(users_to_notify: list,  db: Session = Depends(get_postg_db)):
     for user in users_to_notify:
-        #logging.warning('imprimo el id', user['user_id'])
-        #user_device_token = get_device_token(db, user['user_id'])
-        #if user_device_token is None:
-            #logging.warning("User " + user['user_id'] + " has no registered device.")
-        #else: 
-        title = user['event_name']
-        body = "Recordá que comienza mañana " + user['event_date'] + " a las " + user['event_start_time']
-        logging.warning(user)
-        logging.warning(user['event_id'])
-        send_push_notification('user_device_token', title, body, user['event_id'])
+        user_device_token = get_device_token(db, user['user_id'])
+        if user_device_token is None:
+            logging.warning("User " + user['user_id'] + " has no registered device.")
+        else: 
+            title = user['event_name']
+            body = "Recordá que comienza mañana " + user['event_date'] + " a las " + user['event_start_time']
+            logging.warning(user)
+            logging.warning(user['event_id'])
+            send_push_notification('user_device_token', title, body, user['event_id'])

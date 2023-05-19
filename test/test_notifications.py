@@ -8,8 +8,6 @@ session = config.init_postg_db(app)
 
 client = TestClient(app)
 
-
-
 def test_when_registering_a_new_device_it_registers_correctly():
     device_token = "ExponentPushToken[yEMHoKK54im4ig2FbyU1Rm]"
     user_token = create_access_token("1", 'attendee')
