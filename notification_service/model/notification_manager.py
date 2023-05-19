@@ -29,9 +29,8 @@ from notification_service.database.database import get_postg_db
 
 def send_push_notification(token, title, message, event_id):
     try:
-        token1 = "ExponentPushToken[_cSmg9FAJ7hMlQisW4YBn6]"
         data = {"notification_type": "reminder", "event_id": event_id}
-        pushMessage = PushMessage(to=token1,title=title, body=message, data=data, priority='high',display_in_foreground=False)
+        pushMessage = PushMessage(to=token,title=title, body=message, data=data, priority='high',display_in_foreground=False)
         response = PushClient().publish(pushMessage)
         response.validate_response()
     except PushServerError as exc:
