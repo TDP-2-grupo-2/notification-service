@@ -10,10 +10,11 @@ def register_device(db, user_id, device_token):
         db.add(db_device)
         db.commit()
         db.refresh(db_device)
-        logging.warning(existing_device)
         return db_device
     else: 
-        logging.warning(existing_device)
+        existing_device.token = device_token
+        db.commit()
+        db.refresh(existing_device)
         return existing_device
     
 
