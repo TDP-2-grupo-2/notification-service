@@ -1,5 +1,6 @@
 import datetime
 import logging
+import statistics
 from exponent_server_sdk import (
     DeviceNotRegisteredError,
     PushClient,
@@ -16,29 +17,35 @@ from notification_service.database.notification_repository import get_device_tok
 from fastapi import Depends
 from notification_service.database.database import get_postg_db
 
-"""
-{
-    user_id
-    user_name
-    event_name
-    event_date
-    event_start_time
-}
-"""
-
-
 def send_push_notification(token, title, message, event_id):
     try:
         data = {"notification_type": "reminder", "event_id": event_id}
         pushMessage = PushMessage(to=token,title=title, body=message, data=data, priority='high',display_in_foreground=False)
         response = PushClient().publish(pushMessage)
         response.validate_response()
+        return token
     except PushServerError as exc:
         logging.warning("There was an error sending a reminder of event: ", str(exc))
+        return None
     except (ConnectionError, HTTPError) as exc:
         logging.warning("There was an error sending a reminder of event: ", str(exc))
+        return None
     except Exception as exc:
         logging.warning("There was an error validating the response to notification reminder: ", str(exc))
+        return None
+
+
+
+def notify_users_about_modifications(db, users_to_notify, title, body):
+    notified_users = []
+    for user in users_to_notify:
+        user_device_token = get_device_token(db, user)
+        if user_device_token is None:
+            logging.warning("User " + user['user_id'] + " has no registered device.")
+        else:
+            result = send_push_notification(title, body)
+            if result is not None:
+                notified_users.append(user)
 
 
 
@@ -53,3 +60,17 @@ def notify_users(users_to_notify: list,  db: Session = Depends(get_postg_db)):
             logging.warning(user)
             logging.warning(user['event_id'])
             send_push_notification('user_device_token', title, body, user['event_id'])
+
+
+
+def notify_modifications(modifications: dict, db):
+    # request para obtener usuarios a notificar
+    response = requests.get(f"https://event-service-solfonte.cloud.okteto.net/events/{modifications.event_id}/attendees")
+
+    if response.status_code == statistics.HTTP_200_OK:
+        users_to_notify = response.json()['message']
+        title = modifications.event_name
+        body = modifications.message
+        notify_users_about_modifications(db, users_to_notify, title, body)
+    else:
+        logging.error('received response status', response.status_code)
