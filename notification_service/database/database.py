@@ -16,6 +16,7 @@ def init_database():
     global SessionLocal
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     Base.metadata.create_all(engine)
+    return engine
 
 def get_postg_db():
     db = SessionLocal()

@@ -14,14 +14,12 @@ from requests.exceptions import ConnectionError, HTTPError
 from sqlalchemy.orm import Session
 from notification_service.database.notification_repository import get_device_token
 
+
 from fastapi import Depends
 from notification_service.database.database import get_postg_db
 
-db_users = Depends(get_postg_db)
-logging.warning(db_users)
 
 def send_push_notification(token, title, message, data):
-    logging.warning('llega biennnnnnnn!!!!!!!!!!!!!!!111111')
     try:
         pushMessage = PushMessage(to=token,title=title, body=message, data=data, priority='high',display_in_foreground=False)
         response = PushClient().publish(pushMessage)
@@ -54,12 +52,11 @@ def notify_users_about_modifications(db, users_to_notify, modifications):
 
 
 
-def notify_users(users_to_notify: list,  db: Session = Depends(get_postg_db)):
-    logging.warning('lño que devuelve db', type(db))
+def notify_users(users_to_notify: list, db: Session):
     for user in users_to_notify:
         user_device_token = get_device_token(db, user['user_id'])
         if user_device_token is None:
-            logging.warning("User " + user['user_id'] + " has no registered device.")
+            logging.warning("User " + str(user['user_id']) + " has no registered device.")
         else: 
             title = user['event_name']
             body = "Recordá que comienza mañana " + user['event_date'] + " a las " + user['event_start_time']
