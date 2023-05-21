@@ -12,6 +12,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+##comentario prueba
 
 app.include_router(notification_router, prefix="/notifications", tags=["Notifications"])
 
