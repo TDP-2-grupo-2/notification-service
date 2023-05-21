@@ -10,6 +10,7 @@ from notification_service.utils.jwt_handler import decode_token
 notification_router = APIRouter()
 
 ##FIX: del token que se guarda
+##FIX del token que se recibe cuando se mandan las modificaciones
 @notification_router.post("/new_user", status_code=status.HTTP_201_CREATED)
 def register_new_device(rq: Request, device: DeviceBase, db: Session = Depends(get_postg_db)):
     token = rq.headers.get("authorization")
