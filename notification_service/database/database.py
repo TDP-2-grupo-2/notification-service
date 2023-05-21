@@ -11,7 +11,7 @@ def init_database():
     POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
     POSTGRES_PORT = os.getenv('POSTGRES_PORT')
     POSTGRES_SERVER = os.getenv('POSTGRES_SERVER')
-    db_url =  f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}:{POSTGRES_PORT}/notification_services_db"
+    db_url =  f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}:5432/notification_services_db"
     engine = create_engine(db_url, echo=True)
     global SessionLocal
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
