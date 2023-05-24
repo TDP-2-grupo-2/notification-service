@@ -64,7 +64,7 @@ def notify_users(users_to_notify: list, db: Session):
             logging.warning(user['event_id'])
             data = {"notification_type": "reminder", "event_id": user['event_id']}
 
-            send_push_notification('user_device_token', title, body, data)
+            send_push_notification(user_device_token, title, body, data)
 
 
 
